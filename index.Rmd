@@ -1,7 +1,7 @@
 ---
 title: "Introduction to Spatial Data Analysis in R"
 subtitle: "useR! 2022"
-author: "Adithi Upadhya, Meenakshi Kushwaha"
+author: "Adithi R Upadhya, Meenakshi Kushwaha, and Pratyush Agrawal"
 institute: "ILK Labs"
 date: "20th June 2022"
 output:
