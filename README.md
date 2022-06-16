@@ -13,7 +13,7 @@ basic spatial packages like sf, raster,that are extensions of tidyverse.
 This tutorial is for R users who are familiar with basic data wrangling
 in R and new to spatial analysis. We will introduce various spatial data
 types, and some basic R packages used to download and analyze spatial
-data. Participants will learn how to transform spatial data (focussing
+data. Participants will learn how to transform spatial data (focusing
 on raster and vector data) to different projections, create buffers of
 different radius and extract information from spatial data. We will also
 extract points from a raster, calculate distance, area, perform spatial
