@@ -55,6 +55,9 @@ ncell(small_raster)
 
 ```
 
+
+- Can you change the style of the north arrow
+  - Check here https://rdrr.io/cran/ggspatial/man/north_arrow_orienteering.html
 ```{r Making your own map}
 bangalore_boundary <- st_read("data/BBMP_Boundary.shp")
 bangalore_boundary <- st_transform(bangalore_boundary, crs = my_projection)
@@ -72,9 +75,13 @@ ggplot() + geom_sf(data = bangalore_boundary, color = "green", size = 2, alpha =
 - Fill in the blanks to make your map interactive, 
 - The defaulty map do not use "addTiles()"
    - comment out the code on line 78 to check
+- Can you change the points from circles to a different shape
+[We have not covered it in the tutorial but you can check 
+available shapes here - https://rstudio.github.io/leaflet/markers.html]
+
 ```{r Making your map interactive}
 
-leaflet(bangalore_boundary) %>% 
+_______(bangalore_boundary) %>% 
   addTiles() %>% 
   addPolygons(color = "green") %>%
       addCircles(
