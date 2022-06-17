@@ -79,13 +79,35 @@ class: middle, center
 
 ---
 # A different kind of data structure
-Shapefiles
-are different from csvs
+###Shapefiles are different from csvs
 .pull-left[
-![](img/shp_meme.jpeg)
+
+]
+
+--
+
+.pull-right[
+```{r, echo=FALSE, cache=TRUE}
+knitr::include_graphics("img/shp_meme.jpeg")
+```
+]
+
+.footnote[Image: reddit]
+
 ---
 # Raster data
-![](img/raster_concept.png)
+
+.left-column[
+
+]
+
+.right-column[
+```{r, echo=FALSE, out.width = "80%", cache=TRUE}
+knitr::include_graphics("img/raster_concept.png")
+```
+]
+
+
 .footnote[Source: National Ecological Observatory Network (NEON)]
 
 ---
@@ -106,7 +128,10 @@ Which of these is likely NOT a raster file
 ---
 
 # Summary of Theory
-(mental map)
+- Map Projections and CRS
+- Types of data
+  - Vector
+  - Raster
 ---
 
 class:middle, center
