@@ -172,7 +172,7 @@ Can be linked directly to the `GDAL`, `GEOS`, and `PROJ` libraries that provide 
 
 # Load the libraries 
 
-```{r, eval = FALSE, echo = TRUE, message = FALSE, warning = FALSE}
+```{r message = FALSE, warning = FALSE}
 library(sf)
 library(raster)
 library(tidyverse)
@@ -186,8 +186,8 @@ library(ggspatial)
 
 # Data used here 
 
-- Spotted 
-- Raster
+- Vector data collected from lizards spread across urban Bangalore in 2022.  
+- Raster data is temperature data downloaded from Google Earth Engine for the month of March 2022. 
 
 
 
@@ -199,7 +199,7 @@ library(ggspatial)
 Convert foreign object to an `sf` object.
 
 
-```{r, eval = FALSE, echo = TRUE, message = FALSE, warning = FALSE}
+```{r message = FALSE, warning = FALSE}
 data <- read.csv("data/spotted.csv", sep = ",")
 prj4string <- "+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs"
 my_projection <- st_crs(prj4string)
@@ -221,7 +221,7 @@ class:middle, center
 # Map
 
 
-```{r message = FALSE, warning = FALSE}
+```{r eval = FALSE, echo = TRUE, message = FALSE, warning = FALSE}
 ggplot() + 
   geom_sf(data = data_sf) + 
   coord_sf()
@@ -253,7 +253,7 @@ Write simple features object to file or database.
 
 Read a simple features object.
 
-```{r message = FALSE, warning = FALSE}
+```{r eval = FALSE, echo = TRUE, message = FALSE, warning = FALSE}
 st_write(data_sf, "data/spotted_sf.shp")
 # To save the XY or the coordinates use layer_options
 st_write(data_sf, "data/spotted_sf.shp", layer_options = "GEOMETRY=AS_XY")
@@ -312,7 +312,7 @@ st_geometry_type(data_sf)
 
 Transform or convert coordinates of simple feature.
 
-```{r, eval = FALSE, echo = TRUE, message = FALSE, warning = FALSE}
+```{r message = FALSE, warning = FALSE}
 data_sf_projected <- st_transform(data_sf, 32643)
 ```
 
@@ -517,12 +517,10 @@ A `RasterLayer` can easily be created from scratch using the function raster.
 The default settings will create a global raster data structure with a longitude/latitude coordinate reference system and 1 by 1 degree cells. 
 You can change these settings by providing additional arguments such as `xmn`, `nrow`, `ncol`, `res`, and/or `crs`, to the function. You can also change these parameters after creating the object. 
 
-```{r, eval = FALSE, echo = TRUE, message = FALSE, warning = FALSE}
+```{r message = FALSE, warning = FALSE}
 temp <- raster("data/Ban_Temp_Mar2022.tif")
-temp
 
 y <- raster(ncol = 36, nrow = 18, xmn = -1000, xmx = 1000, ymn = -100, ymx = 900)
-y
 ```
 
 ---
@@ -575,7 +573,7 @@ class:middle, center
 
 # Summarizing functions
 
-Use `cellStats` to obtain a summary for all cells of a single Raster object. 
+Use `cellStats` to obtain a summary for all cells of a single raster object. 
 
 ```{r message = FALSE, warning = FALSE}
 cellStats(temp, mean)
@@ -585,7 +583,7 @@ cellStats(temp, mean)
 
 # Raster algebra 
 
-When used with a Raster object as first argument, normal summary statistics functions such as `min`, `max`, and `mean` return a `RasterLayer` (usually for multiple layers). 
+When used with a raster object as first argument, normal summary statistics functions such as `min`, `max`, and `mean` return a `RasterLayer` (usually for multiple layers). 
 
 ```{r message = FALSE, warning = FALSE}
 r1 <- temp
@@ -600,17 +598,17 @@ plot(max(s, na.rm = TRUE))
 
 # Extract
 
-Extract values from a `Raster` object at the locations of spatial vector data
+Extract values from a `raster` object at the locations of spatial vector data
 
 ```{r message = FALSE, warning = FALSE}
-extract(temp, data_sf)
+raster::extract(temp, data_sf)
 ```
 
 ---
 
 # Mask by buffer 
 
-Mask values from a `Raster` object at the locations of spatial vector data
+Mask values from a `raster` object at the locations of spatial vector data
 
 ```{r message = FALSE, warning = FALSE}
 data_sf_subset <- data_sf[1, ]
@@ -635,11 +633,31 @@ Returns a geographic subset of an object as specified by an Extent object (or ob
 
 # Calculate area
 
-- Computes the approximate surface area of cells in an unprojected (longitude/latitude) `Raster` object
-- returns all values or the values for a number of rows of a `Raster` object. Values returned for a `RasterLayer` are a vector
+- Computes the approximate surface area of cells in an unprojected (longitude/latitude) `r`aster` object
+- returns all values or the values for a number of rows of a `raster` object. Values returned for a `RasterLayer` are a vector
 
 ```{r message = FALSE, warning = FALSE}
 sum(getValues(area(temp_proj)))
+```
+
+---
+class:middle, center
+
+# Demo
+
+---
+
+
+class:middle, center
+
+![](img/raster_concept_map.png)
+
+---
+
+# Rasterize using `stars`
+
+```{r message = FALSE, warning = FALSE}
+raster_data <- st_rasterize(data_sf)
 ```
 
 ---
@@ -647,23 +665,6 @@ sum(getValues(area(temp_proj)))
 class:middle, center
 
 # Demo
-
----
-
-class:middle, center
-
-
-![](img/raster_concept_map.png)
-
-
----
-
-
-# Rasterize using `stars`
-
-```{r message = FALSE, warning = FALSE}
-raster_data <- st_rasterize(data_sf)
-```
 
 ---
 
@@ -684,7 +685,6 @@ class:middle, center
 # Demo
 
 ---
-
 
 # Static Map 
 
@@ -709,7 +709,6 @@ class:middle, center
 
 ---
 
-
 # Interactive Map
 
 ```{r, eval = FALSE, echo = TRUE}
@@ -733,6 +732,7 @@ class:middle, center
 
 ---
 
+
 # Data Sources 
 
 - [NaturalEarth](https://www.naturalearthdata.com/) supported by [`rnaturalearth`](https://cran.r-project.org/web/packages/rnaturalearth/README.html).
@@ -743,6 +743,15 @@ class:middle, center
 - [Global Human Settlement Layer](https://ghsl.jrc.ec.europa.eu/) provides population data and other similar datasets. 
 - [USGS Global Island Explorer](https://rmgsc.cr.usgs.gov/gie/) island datasets. 
 - [spData](https://cran.r-project.org/web/packages/spData/spData.pdf) diverse spatial datasets for demonstrating and teaching spatial data analysis. 
+
+---
+
+# Sometimes.. 
+
+- Making maps in R is not always easy.
+- It is slow.
+- Map transformations can be a problem. 
+- Adding annotations can be tedious. 
 
 
 ---

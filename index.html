@@ -191,6 +191,14 @@ library(ggplot2)
 library(ggspatial)
 ```
 
+---
+
+# Data used here 
+
+- Vector data collected from lizards spread across urban Bangalore in 2022.  
+- Raster data is temperature data downloaded from Google Earth Engine for the month of March 2022. 
+
+
 
 ---
 
@@ -220,20 +228,14 @@ class:middle, center
 
 ---
 
-# Interactive Map
+# Map
 
 
 
 ```r
-leaflet(data) %&gt;%
-      addTiles() %&gt;%
-      addCircles(
-        data = data,
-        lng = ~ Longitude,
-        lat = ~ Latitude,
-        radius = 20,
-        weight = 20,
-        fill = TRUE) 
+ggplot() + 
+  geom_sf(data = data_sf) + 
+  coord_sf()
 ```
 
 
@@ -252,6 +254,10 @@ Checks whether a geometry is valid, or makes an invalid geometry valid.
 
 ```r
 st_is_valid(data_sf)
+```
+
+```
+## [1] TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE
 ```
 
 
@@ -286,6 +292,10 @@ p2 &lt;- st_point(c(1, 4))
 class(p1) 
 ```
 
+```
+## [1] "XY"    "POINT" "sfg"
+```
+
 ---
 
 # Geometry types
@@ -316,7 +326,38 @@ Set or replace retrieve coordinate reference system from object.
 
 ```r
 st_crs(data_sf)
+```
+
+```
+## Coordinate Reference System:
+##   User input: +proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs 
+##   wkt:
+## GEOGCRS["unknown",
+##     DATUM["World Geodetic System 1984",
+##         ELLIPSOID["WGS 84",6378137,298.257223563,
+##             LENGTHUNIT["metre",1]],
+##         ID["EPSG",6326]],
+##     PRIMEM["Greenwich",0,
+##         ANGLEUNIT["degree",0.0174532925199433],
+##         ID["EPSG",8901]],
+##     CS[ellipsoidal,2],
+##         AXIS["longitude",east,
+##             ORDER[1],
+##             ANGLEUNIT["degree",0.0174532925199433,
+##                 ID["EPSG",9122]]],
+##         AXIS["latitude",north,
+##             ORDER[2],
+##             ANGLEUNIT["degree",0.0174532925199433,
+##                 ID["EPSG",9122]]]]
+```
+
+```r
 st_geometry_type(data_sf)
+```
+
+```
+## [1] POINT POINT POINT POINT POINT POINT POINT POINT POINT
+## 18 Levels: GEOMETRY POINT LINESTRING POLYGON MULTIPOINT ... TRIANGLE
 ```
 
 ---
@@ -330,6 +371,9 @@ Transform or convert coordinates of simple feature.
 data_sf_projected &lt;- st_transform(data_sf, 32643)
 ```
 
+???
+
+32643 is UTM projection with units m. 
 
 ---
 
@@ -356,8 +400,15 @@ If the coordinate reference system of x was set, these functions return values w
 
 
 ```r
-st_distance(data_sf_projected[c(1), ], data_sf_projected[c(2), ])
+st_distance(data_sf_projected[c(1), ], data_sf_projected[c(5), ])
 ```
+
+```
+## Units: [m]
+##          [,1]
+## [1,] 17016.08
+```
+
 
 ---
 
@@ -372,9 +423,13 @@ background-size: contain
 
 # `st_buffer`
 
+Buffer is determination of a zone around a geographic feature containing location that are within a specified distance of that feature.
+
 Computes a buffer around this geometry/each geometry.
 
 Returns a new geometry.
+
+Specify the radius of the buffer. 
 
 
 ```r
@@ -395,12 +450,7 @@ class:middle, center
 
 Returns the area of a geometry, in the coordinate reference system used; in case x is in degrees longitude/latitude, `st_geod_area` is used for area calculation.
 
-
----
-
-class:middle, center
-
-# Demo
+Here we will use projected data to calculate area. 
 
 
 ---
@@ -409,7 +459,7 @@ class:middle, center
 
 `st_boundary` returns the boundary of a geometry
 
-`st_convexhull` creates the convex hull of a set of points
+`st_centroid` gives the centroid of a geometry
 
 `st_reverse` reverses the nodes in a line
 
@@ -418,8 +468,6 @@ class:middle, center
 `st_triangulate` triangulates set of points (not constrained)
 
 `st_polygonize` creates polygon from lines that form a closed ring. In case of `st_polygonize`, x must be an object of class `LINESTRING` or `MULTILINESTRING`, or an sfc geometry list-column object containing these
-
-`st_centroid` gives the centroid of a geometry
 
 `st_segmentize` adds points to straight lines
 
@@ -444,6 +492,12 @@ Returns `TRUE` or `FALSE.`
 
 ```r
 st_intersects(data_sf_projected[1, ], data_sf_projected[2, ])
+```
+
+```
+## Sparse geometry binary predicate list of length 1, where the predicate
+## was `intersects'
+##  1: (empty)
 ```
 
 
@@ -489,11 +543,12 @@ Return a sparse matrix with matching (`TRUE`) indexes, or a full logical matrix.
 
 
 ```r
-a &lt;- st_sf(a = 1:3,
- geom = st_sfc(st_point(c(1, 1)), st_point(c(2, 2)), st_point(c(3, 3))))
-b &lt;- st_sf(b = 11:14,
- geom = st_sfc(st_point(c(10, 10)), st_point(c(2, 2)), st_point(c(2, 2)), st_point(c(3, 3))))
-c &lt;- st_join(a, b, join = st_nearest_feature)
+data_join &lt;- read.csv("data/spotted_join.csv", sep = ",")
+# Create sf object
+data_join_sf &lt;- st_as_sf(data_join, coords = c("Longitude", "Latitude"), crs = my_projection)
+
+# Join using predicate 
+joined &lt;- st_join(data_sf, data_join_sf, join = st_equals)
 ```
 
 
@@ -510,6 +565,10 @@ class:middle, center
 
 ![](img/sf_concept_map.png)
 
+
+???
+
+Summary of the vector data analysis till now. 
 
 ---
 
@@ -532,10 +591,8 @@ You can change these settings by providing additional arguments such as `xmn`, `
 
 ```r
 temp &lt;- raster("data/Ban_Temp_Mar2022.tif")
-temp
 
 y &lt;- raster(ncol = 36, nrow = 18, xmn = -1000, xmx = 1000, ymn = -100, ymx = 900)
-y
 ```
 
 ---
@@ -548,13 +605,60 @@ class:middle, center
 
 # Summary and Resolution
 
+`aggregate` - aggregates a Raster object to create a new RasterLayer or RasterBrick with a lower resolution (larger cells). 
+
 
 ```r
 res(temp)
-summary(temp)
+```
 
+```
+## [1] 0.1000005 0.1000005
+```
+
+```r
+summary(temp)
+```
+
+```
+##         Ban_Temp_Mar2022
+## Min.            297.7071
+## 1st Qu.         298.3609
+## Median          298.6290
+## 3rd Qu.         299.0802
+## Max.            300.2286
+## NA's              0.0000
+```
+
+```r
+temp_agg &lt;- aggregate(temp, 2)
+res(temp_agg)
+```
+
+```
+## [1] 0.2000009 0.2000009
+```
+
+```r
 res(y)
+```
+
+```
+## [1] 55.55556 55.55556
+```
+
+```r
 summary(y)
+```
+
+```
+##         layer
+## Min.       NA
+## 1st Qu.    NA
+## Median     NA
+## 3rd Qu.    NA
+## Max.       NA
+## NA's       NA
 ```
 
 ---
@@ -566,13 +670,24 @@ To transform a `RasterLayer` to another coordinate reference system (projection)
 
 ```r
 # To transform 
-temp_proj &lt;- projectRaster(temp, crs = "+proj=utm +zone=48 +datum=WGS84", method = "ngb")
+temp_proj &lt;- projectRaster(temp, crs = "+proj=utm +zone=48 +datum=WGS84")
 
 # To set the coordinate system 
 projection(y) &lt;- "+proj=utm +zone=48 +datum=WGS84"
 y
+```
+
+```
+## class      : RasterLayer 
+## dimensions : 18, 36, 648  (nrow, ncol, ncell)
+## resolution : 55.55556, 55.55556  (x, y)
+## extent     : -1000, 1000, -100, 900  (xmin, xmax, ymin, ymax)
+## crs        : +proj=utm +zone=48 +datum=WGS84 +units=m +no_defs
+```
+
+```r
 # To transform
-y_prof &lt;- projectRaster(y, crs = "+proj=longlat +datum=WGS84 +no_defs", method = "ngb")
+y_prof &lt;- projectRaster(y, crs = "+proj=longlat +datum=WGS84 +no_defs")
 ```
 
 
@@ -586,18 +701,22 @@ class:middle, center
 
 # Summarizing functions
 
-Use `cellStats` to obtain a summary for all cells of a single Raster object. 
+Use `cellStats` to obtain a summary for all cells of a single raster object. 
 
 
 ```r
 cellStats(temp, mean)
 ```
 
+```
+## [1] 298.7602
+```
+
 ---
 
 # Raster algebra 
 
-When used with a Raster object as first argument, normal summary statistics functions such as `min`, `max`, and `mean` return a `RasterLayer` (usually for multiple layers). 
+When used with a raster object as first argument, normal summary statistics functions such as `min`, `max`, and `mean` return a `RasterLayer` (usually for multiple layers). 
 
 
 ```r
@@ -608,23 +727,30 @@ s &lt;- stack(r1, r2)
 plot(max(s, na.rm = TRUE))
 ```
 
+![](index_files/figure-html/unnamed-chunk-17-1.png)&lt;!-- --&gt;
+
 
 ---
 
 # Extract
 
-Extract values from a `Raster` object at the locations of spatial vector data
+Extract values from a `raster` object at the locations of spatial vector data
 
 
 ```r
-extract(temp, data_sf)
+raster::extract(temp, data_sf)
+```
+
+```
+## [1] 298.2247 298.2657 298.2442 298.2657 298.4747 298.2442 298.2442 298.6700
+## [9] 298.2657
 ```
 
 ---
 
 # Mask by buffer 
 
-Mask values from a `Raster` object at the locations of spatial vector data
+Mask values from a `raster` object at the locations of spatial vector data
 
 
 ```r
@@ -650,25 +776,31 @@ Returns a geographic subset of an object as specified by an Extent object (or ob
 
 # Calculate area
 
-- Computes the approximate surface area of cells in an unprojected (longitude/latitude) `Raster` object
-- returns all values or the values for a number of rows of a `Raster` object. Values returned for a `RasterLayer` are a vector
+- Computes the approximate surface area of cells in an unprojected (longitude/latitude) `r`aster` object
+- returns all values or the values for a number of rows of a `raster` object. Values returned for a `RasterLayer` are a vector
 
 
 ```r
 sum(getValues(area(temp_proj)))
 ```
 
+```
+## [1] 3.0996e+10
+```
 
 ---
+class:middle, center
+
+# Demo
+
+---
+
 
 class:middle, center
 
-
 ![](img/raster_concept_map.png)
 
-
 ---
-
 
 # Rasterize using `stars`
 
@@ -676,6 +808,12 @@ class:middle, center
 ```r
 raster_data &lt;- st_rasterize(data_sf)
 ```
+
+---
+
+class:middle, center
+
+# Demo
 
 ---
 
@@ -687,7 +825,7 @@ tif &lt;- read_stars("data/Ban_Temp_Mar2022.tif")
 summary(tif)
 class(tif)
 # Convert a foreign object to sf
-temp_sf &lt;- st_as_sf(tif, as_points = TRUE, merge = FALSE)
+temp_sf &lt;- st_as_sf(tif, as_points = TRUE)
 ```
 
 ---
@@ -697,7 +835,6 @@ class:middle, center
 # Demo
 
 ---
-
 
 # Static Map 
 
@@ -723,7 +860,6 @@ class:middle, center
 
 ---
 
-
 # Interactive Map
 
 
@@ -748,9 +884,10 @@ class:middle, center
 
 ---
 
+
 # Data Sources 
 
-- [NaturalEarth](https://www.naturalearthdata.com/) supported by [`rnaturalearth`](https://cran.r-project.org/web/packages/rnaturalearth/README.html)
+- [NaturalEarth](https://www.naturalearthdata.com/) supported by [`rnaturalearth`](https://cran.r-project.org/web/packages/rnaturalearth/README.html).
 - [OpenStreetMaps](https://www.openstreetmap.org/) supported by [`osmdata`](https://cran.r-project.org/web/packages/osmdata/index.html).
 - [ETOPO5](https://www.ngdc.noaa.gov/mgg/global/etopo5.HTML) elevation data. 
 - [Movebank](https://www.movebank.org/cms/movebank-main) animal movement data.
@@ -758,6 +895,15 @@ class:middle, center
 - [Global Human Settlement Layer](https://ghsl.jrc.ec.europa.eu/) provides population data and other similar datasets. 
 - [USGS Global Island Explorer](https://rmgsc.cr.usgs.gov/gie/) island datasets. 
 - [spData](https://cran.r-project.org/web/packages/spData/spData.pdf) diverse spatial datasets for demonstrating and teaching spatial data analysis. 
+
+---
+
+# Sometimes.. 
+
+- Making maps in R is not always easy.
+- It is slow.
+- Map transformations can be a problem. 
+- Adding annotations can be tedious. 
 
 
 ---
