@@ -27,6 +27,8 @@ library(ggspatial)
 
 ```
 
+### Your data set
+
 ## Reading vector data 
 ## Reading shp file
 
@@ -45,8 +47,10 @@ plot(my_vector)
 
 ```{r Vector operations, eval = FALSE, echo = TRUE}
 st_area()
-st_buffer()
-st_join()
+st_centroid()
+st_boundary()
+
+# buffer later
 ```
 
 ```{r Reading and re raster file}
