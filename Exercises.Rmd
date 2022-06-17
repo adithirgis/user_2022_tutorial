@@ -1,0 +1,83 @@
+---
+title: "Introduction to Spatial Data Analysis in R"
+subtitle: "Exercises"
+author: "Adithi Upadhya, Meenakshi Kushwaha"
+institute: "ILK Labs"
+date: "20th June 2022 (updated: `r Sys.Date()`)"
+output:
+  html_document:
+    code_folding: hide
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+### Load Libraries  
+
+
+```{r, message = FALSE, warning = FALSE}
+library(sf)# for vector data
+library(raster) # for raster data
+library(here) # for specifying working directory
+library(leaflet)# for interactive maps
+library(ggplot2)
+library(ggspatial)
+
+```
+
+## Reading vector data 
+## Reading shp file
+
+```{r Read and plot shapefile}
+my_vector <- st_read(here("data", "BBMP_Boundary.shp"))
+
+plot(my_vector)
+## add spotted data to this
+## make leaflet map
+```
+
+
+```{r Vector operations}
+st_area()
+st_buffer()
+st_join()
+```
+
+```{r Reading and re raster file}
+my_raster <- raster(here("data", "Ban_Temp_Mar2022.tif"))
+res(my_raster)
+
+ncell(my_raster)
+
+small_raster <- aggregate(my_raster, 2)
+ncell(small_raster)
+
+```
+
+```{r Making your own map}
+bangalore_boundary <- st_read("data/BBMP_Boundary.shp")
+bangalore_boundary <- st_transform(bangalore_boundary, crs = my_projection)
+
+ggplot() + geom_sf(data = bangalore_boundary, color = "green", size = 2, alpha = 0.1, fill = "green") +
+  geom_sf(data = data_sf, color = "blue", size = 2) + theme_bw() +
+  annotation_scale(location = "bl", width_hint = 0.5) +
+  annotation_north_arrow(location = "bl", which_north = "true", 
+                         pad_x = unit(0.75, "in"), pad_y = unit(0.5, "in"),
+                         style = north_arrow_fancy_orienteering) +
+  coord_sf(xlim = c(77.4, 77.8), ylim = c(12.8, 13.2))
+```
+
+```{r Making your map interactive}
+leaflet(bangalore_boundary) %>% 
+  addTiles() %>% 
+  addPolygons(color = "green") %>%
+      addCircles(
+        data = data,
+        lng = ~ Longitude,
+        lat = ~ Latitude,
+        radius = 20,
+        weight = 20,
+        fill = TRUE)
+```
+
