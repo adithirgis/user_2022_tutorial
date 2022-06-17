@@ -199,7 +199,7 @@ library(ggspatial)
 Convert foreign object to an `sf` object.
 
 
-```{r message = FALSE, warning = FALSE}
+```{r message = FALSE, warning = FALSE, cache=TRUE}
 data <- read.csv("data/spotted.csv", sep = ",")
 prj4string <- "+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs"
 my_projection <- st_crs(prj4string)
@@ -221,7 +221,7 @@ class:middle, center
 # Map
 
 
-```{r eval = FALSE, echo = TRUE, message = FALSE, warning = FALSE}
+```{r eval = FALSE, echo = TRUE, message = FALSE, warning = FALSE, cache=TRUE}
 ggplot() + 
   geom_sf(data = data_sf) + 
   coord_sf()
@@ -240,7 +240,7 @@ class:middle, center
 
 Checks whether a geometry is valid, or makes an invalid geometry valid.
 
-```{r message = FALSE, warning = FALSE}
+```{r message = FALSE, warning = FALSE, cache=TRUE}
 st_is_valid(data_sf)
 ```
 
@@ -253,7 +253,7 @@ Write simple features object to file or database.
 
 Read a simple features object.
 
-```{r eval = FALSE, echo = TRUE, message = FALSE, warning = FALSE}
+```{r eval = FALSE, echo = TRUE, message = FALSE, warning = FALSE, cache=TRUE}
 st_write(data_sf, "data/spotted_sf.shp")
 # To save the XY or the coordinates use layer_options
 st_write(data_sf, "data/spotted_sf.shp", layer_options = "GEOMETRY=AS_XY")
@@ -267,7 +267,7 @@ data_sf <- st_read("data/spotted_sf.shp")
 
 Create simple feature from a numeric vector, matrix or list.
 
-```{r message = FALSE, warning = FALSE}
+```{r message = FALSE, warning = FALSE, cache=TRUE}
 p1 <- st_point(c(2, 3))
 p2 <- st_point(c(1, 4))
 
@@ -301,7 +301,7 @@ Retrieve coordinate reference system from `sf` object.
 
 Set or replace retrieve coordinate reference system from object.
 
-```{r message = FALSE, warning = FALSE}
+```{r message = FALSE, warning = FALSE, cache=TRUE}
 st_crs(data_sf)
 st_geometry_type(data_sf)
 ```
@@ -312,7 +312,7 @@ st_geometry_type(data_sf)
 
 Transform or convert coordinates of simple feature.
 
-```{r message = FALSE, warning = FALSE}
+```{r message = FALSE, warning = FALSE, cache=TRUE}
 data_sf_projected <- st_transform(data_sf, 32643)
 ```
 
@@ -343,7 +343,7 @@ Compute Euclidian or great circle distance between pairs of geometries; compute,
 
 If the coordinate reference system of x was set, these functions return values with unit of measurement.
 
-```{r message = FALSE, warning = FALSE}
+```{r message = FALSE, warning = FALSE, cache=TRUE}
 st_distance(data_sf_projected[c(1), ], data_sf_projected[c(5), ])
 ```
 
@@ -369,7 +369,7 @@ Returns a new geometry.
 
 Specify the radius of the buffer. 
 
-```{r, eval = FALSE, echo = TRUE, message = FALSE, warning = FALSE}
+```{r, eval = FALSE, echo = TRUE, message = FALSE, warning = FALSE, cache=TRUE}
 buf <- st_buffer(data_sf_projected, dist = 3000)
 ```
 
@@ -426,7 +426,7 @@ To find whether pairs of simple feature geometries intersect.
 
 Returns `TRUE` or `FALSE.`
 
-```{r message = FALSE, warning = FALSE}
+```{r message = FALSE, warning = FALSE, cache=TRUE}
 st_intersects(data_sf_projected[1, ], data_sf_projected[2, ])
 ```
 
@@ -471,7 +471,7 @@ Return a sparse matrix with matching (`TRUE`) indexes, or a full logical matrix.
 
 # `st_join` 
 
-```{r, eval = FALSE, echo = TRUE, message = FALSE, warning = FALSE}
+```{r, eval = FALSE, echo = TRUE, message = FALSE, warning = FALSE, cache=TRUE}
 data_join <- read.csv("data/spotted_join.csv", sep = ",")
 # Create sf object
 data_join_sf <- st_as_sf(data_join, coords = c("Longitude", "Latitude"), crs = my_projection)
@@ -517,7 +517,7 @@ A `RasterLayer` can easily be created from scratch using the function raster.
 The default settings will create a global raster data structure with a longitude/latitude coordinate reference system and 1 by 1 degree cells. 
 You can change these settings by providing additional arguments such as `xmn`, `nrow`, `ncol`, `res`, and/or `crs`, to the function. You can also change these parameters after creating the object. 
 
-```{r message = FALSE, warning = FALSE}
+```{r message = FALSE, warning = FALSE, cache=TRUE}
 temp <- raster("data/Ban_Temp_Mar2022.tif")
 
 y <- raster(ncol = 36, nrow = 18, xmn = -1000, xmx = 1000, ymn = -100, ymx = 900)
@@ -535,7 +535,7 @@ class:middle, center
 
 `aggregate` - aggregates a Raster object to create a new RasterLayer or RasterBrick with a lower resolution (larger cells). 
 
-```{r message = FALSE, warning = FALSE}
+```{r message = FALSE, warning = FALSE, cache=TRUE}
 res(temp)
 summary(temp)
 temp_agg <- aggregate(temp, 2)
@@ -551,7 +551,7 @@ summary(y)
 
 To transform a `RasterLayer` to another coordinate reference system (projection)
 
-```{r message = FALSE, warning = FALSE}
+```{r message = FALSE, warning = FALSE, cache=TRUE}
 # To transform 
 temp_proj <- projectRaster(temp, crs = "+proj=utm +zone=48 +datum=WGS84")
 
@@ -575,7 +575,7 @@ class:middle, center
 
 Use `cellStats` to obtain a summary for all cells of a single raster object. 
 
-```{r message = FALSE, warning = FALSE}
+```{r message = FALSE, warning = FALSE, cache=TRUE}
 cellStats(temp, mean)
 ```
 
@@ -585,7 +585,7 @@ cellStats(temp, mean)
 
 When used with a raster object as first argument, normal summary statistics functions such as `min`, `max`, and `mean` return a `RasterLayer` (usually for multiple layers). 
 
-```{r message = FALSE, warning = FALSE}
+```{r message = FALSE, warning = FALSE, cache=TRUE}
 r1 <- temp
 r2 <- r1
 
@@ -600,7 +600,7 @@ plot(max(s, na.rm = TRUE))
 
 Extract values from a `raster` object at the locations of spatial vector data
 
-```{r message = FALSE, warning = FALSE}
+```{r message = FALSE, warning = FALSE, cache=TRUE}
 raster::extract(temp, data_sf)
 ```
 
@@ -610,7 +610,7 @@ raster::extract(temp, data_sf)
 
 Mask values from a `raster` object at the locations of spatial vector data
 
-```{r message = FALSE, warning = FALSE}
+```{r message = FALSE, warning = FALSE, cache=TRUE}
 data_sf_subset <- data_sf[1, ]
 
 data_sf_buffer <- st_buffer(data_sf_subset, dist = 5000) 
@@ -627,13 +627,12 @@ class:middle, center
 
 # Raster operation 
 
-Returns a geographic subset of an object as specified by an Extent object (or object from which an extent object can be extracted/created) 
+Returns a geographic subset of an object as specified by an Extent object (or object from which an extent object can be extracted/created)
 
 ---
-
 # Calculate area
 
-- Computes the approximate surface area of cells in an unprojected (longitude/latitude) `r`aster` object
+- Computes the approximate surface area of cells in an unprojected (longitude/latitude) `raster` object
 - returns all values or the values for a number of rows of a `raster` object. Values returned for a `RasterLayer` are a vector
 
 ```{r message = FALSE, warning = FALSE}
@@ -641,13 +640,12 @@ sum(getValues(area(temp_proj)))
 ```
 
 ---
-class:middle, center
+
+class: middle, center
 
 # Demo
 
 ---
-
-
 class:middle, center
 
 ![](img/raster_concept_map.png)
@@ -656,7 +654,7 @@ class:middle, center
 
 # Rasterize using `stars`
 
-```{r message = FALSE, warning = FALSE}
+```{r message = FALSE, warning = FALSE, cache=TRUE}
 raster_data <- st_rasterize(data_sf)
 ```
 
@@ -670,7 +668,7 @@ class:middle, center
 
 # Vectorize using `stars` 
  
-```{r, eval = FALSE, echo = TRUE, message = FALSE, warning = FALSE}
+```{r, eval = FALSE, echo = TRUE, message = FALSE, warning = FALSE, cache=TRUE}
 tif <- read_stars("data/Ban_Temp_Mar2022.tif")
 summary(tif)
 class(tif)
@@ -688,7 +686,7 @@ class:middle, center
 
 # Static Map 
 
-```{r, eval = FALSE, echo = TRUE}
+```{r, eval = FALSE, echo = TRUE, cache=TRUE}
 bangalore_boundary <- st_read("data/BBMP_Boundary.shp")
 bangalore_boundary <- st_transform(bangalore_boundary, crs = my_projection)
 
@@ -711,7 +709,7 @@ class:middle, center
 
 # Interactive Map
 
-```{r, eval = FALSE, echo = TRUE}
+```{r, eval = FALSE, echo = TRUE, cache=TRUE}
 leaflet(bangalore_boundary) %>% 
   addTiles() %>% 
   addPolygons(color = "green") %>%
@@ -786,4 +784,7 @@ Images from [rawpixel](https://www.rawpixel.com/)
 - [Adithi R Upadhya](https://adithirugis.rbind.io/)
 - [Meenakshi Kushwaha](https://meenakshi.rbind.io/) 
 - [Pratyush Agrawal](https://twitter.com/Pratyushagraw97) 
+
+
+
 
