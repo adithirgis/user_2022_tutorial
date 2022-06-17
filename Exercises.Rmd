@@ -60,7 +60,8 @@ bangalore_boundary <- st_read("data/BBMP_Boundary.shp")
 bangalore_boundary <- st_transform(bangalore_boundary, crs = my_projection)
 
 ggplot() + geom_sf(data = bangalore_boundary, color = "green", size = 2, alpha = 0.1, fill = "green") +
-  geom_sf(data = data_sf, color = "blue", size = 2) + theme_bw() +
+  geom_sf(data = data_sf, color = "blue", size = 2) + 
+  theme_bw() +
   annotation_scale(location = "bl", width_hint = 0.5) +
   annotation_north_arrow(location = "bl", which_north = "true", 
                          pad_x = unit(0.75, "in"), pad_y = unit(0.5, "in"),
@@ -68,7 +69,11 @@ ggplot() + geom_sf(data = bangalore_boundary, color = "green", size = 2, alpha =
   coord_sf(xlim = c(77.4, 77.8), ylim = c(12.8, 13.2))
 ```
 
+- Fill in the blanks to make your map interactive, 
+- The defaulty map do not use "addTiles()"
+   - comment out the code on line 78 to check
 ```{r Making your map interactive}
+
 leaflet(bangalore_boundary) %>% 
   addTiles() %>% 
   addPolygons(color = "green") %>%
