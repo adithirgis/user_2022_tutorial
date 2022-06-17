@@ -45,13 +45,19 @@ important to transform them to a common CRS so they
 align with one another. This is similar to making sure that
 units are the same when measuring volume or distances. 
 
+---
+
 ## To remember
 It is usually impossible to preserve all characteristics at the same time in a map projection. This means that when you want to carry out accurate analytical operations, you need to use a map projection that provides the best characteristics for your analyses. For example, if you need to measure distances on your map,
 
 
 ---
-??? It's a complex topic but here are some things to keep in mind.
+
+??? 
+
+It's a complex topic but here are some things to keep in mind.
 Latitude/Longitude
+
 WGS84 (EPSG: 4326)
 ## Commonly used by organizations that provide GIS data
 for the entire globe or many countries. CRS used by Google
