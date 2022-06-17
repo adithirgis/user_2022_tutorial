@@ -184,6 +184,7 @@ Can be linked directly to the `GDAL`, `GEOS`, and `PROJ` libraries that provide 
 ```r
 library(sf)
 library(raster)
+library(tidyverse)
 library(stars)
 library(leaflet)
 library(ggplot2)
@@ -209,6 +210,7 @@ my_projection &lt;- st_crs(prj4string)
 data_sf &lt;- st_as_sf(data, coords = c("Longitude", "Latitude"), crs = my_projection)
 ```
 
+The order of Longitude, Latitude, and the exact column names are important.    
 
 ---
 

@@ -9,7 +9,7 @@ output:
     code_folding: hide
 ---
 
-```{r setup, include=FALSE}
+```{r setup, include = FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
@@ -17,11 +17,12 @@ knitr::opts_chunk$set(echo = TRUE)
 
 
 ```{r, message = FALSE, warning = FALSE}
-library(sf)# for vector data
+library(sf) # for vector data
 library(raster) # for raster data
 library(here) # for specifying working directory
-library(leaflet)# for interactive maps
-library(ggplot2)
+library(tidyverse)
+library(leaflet) # for interactive maps
+library(ggplot2) # plotting 
 library(ggspatial)
 
 ```
@@ -30,15 +31,19 @@ library(ggspatial)
 ## Reading shp file
 
 ```{r Read and plot shapefile}
-my_vector <- st_read(here("data", "BBMP_Boundary.shp"))
+data <- read.csv("data/spotted.csv", sep = ",")
+prj4string <- "+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs"
+my_projection <- st_crs(prj4string)
+data_sf <- st_as_sf(data, coords = c("Longitude", "Latitude"), crs = my_projection)
 
+my_vector <- st_read(here("data", "BBMP_Boundary.shp"))
 plot(my_vector)
 ## add spotted data to this
 ## make leaflet map
 ```
 
 
-```{r Vector operations}
+```{r Vector operations, eval = FALSE, echo = TRUE}
 st_area()
 st_buffer()
 st_join()
@@ -79,7 +84,7 @@ ggplot() + geom_sf(data = bangalore_boundary, color = "green", size = 2, alpha =
 [We have not covered it in the tutorial but you can check 
 available shapes here - https://rstudio.github.io/leaflet/markers.html]
 
-```{r Making your map interactive}
+```{r Making your map interactive, eval = FALSE, echo = TRUE}
 
 _______(bangalore_boundary) %>% 
   addTiles() %>% 
