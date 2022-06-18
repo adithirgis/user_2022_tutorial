@@ -30,75 +30,146 @@ class:middle, center
 
 ---
 # Coordinate Reference Systems (CRS)
-   CRS defines with the help of coordinates, how the two-dimensional, projected map is related to real locations on he earth.
-   - For example, a location of (140, 12) is not meaningful if you do know where the origin is and if the x-coordinate is 140 meters, kilometers, or perhaps degrees away from it (in the x direction).
-  
+ Tell us how a map is related to real locations on earth
+
+###Geographic vs Projected CRS   
+![](img/crs.png)
+
+.footnote[Source:ESRI]
+???
+ For example, a location of (130, 12) is not meaningful if you do know where the origin is and if the x-coordinate is 140 meters, kilometers, or perhaps degrees away from it (in the x direction).
+ https://www.esri.com/arcgis-blog/products/arcgis-pro/mapping/gcs_vs_pcs/
+ A GCS defines where the data is located on the earth’s surface.
+A PCS tells the data how to draw on a flat surface, like on a paper map or a computer screen.
+A GCS is round, and so records locations in angular units (usually degrees). A PCS is flat, so it records locations in linear units (usually meters).
+
+---
+
 ## CRS in R  
 
-- need to know if the data is projected
-  - which projection system
+.pull-left[
+- We need to know if the data is projected
+  - which projection system is used
 - if not, you need to project it
   - use the correct system
 - most common projection is WGS84
-- In R, when data with different CRS are combined it is
-important to transform them to a common CRS so they
-align with one another. This is similar to making sure that
+  - good for mapping global data
+- When data with different CRS are combined 
+  - need to transform them to a common CRS so they
+align with one another
+]
+
+--
+
+.pull-right[
+![](img/crs2.png)
+#### Why so many CRS?
+- There are many different models of earth and so different algorithms for projection
+- Choice often based on minimum distortion for region of interest/parameter
+
+]
+
+.footnote[https://www.esri.com/arcgis-blog/products/arcgis-pro/mapping/gcs_vs_pcs/]
+
+
+???
+. This is similar to making sure that
 units are the same when measuring volume or distances. 
-
----
-
-## To remember
-
 It is usually impossible to preserve all characteristics at the same time in a map projection. This means that when you want to carry out accurate analytical operations, you need to use a map projection that provides the best characteristics for your analyses. For example, if you need to measure distances on your map,
-
-
+Some are good for preserving areas on your map, others at preserving angles or distances.
+Maps are flat, so your map must have a PCS in order to know how to draw.
 ---
 
-It's a complex topic but here are some things to keep in mind.
+# CRS in R
+
+.left-column[
+### Components of a CRS
+- projection 
+- ellipsoid
+  - defines general shape of earth
+- datum
+  - defines origin 
+]
+
+.right-column[
+![](img/datum.jpeg)
+]
+
+
+.footnote[https://www.nceas.ucsb.edu/]
+
+???
 Latitude/Longitude - WGS84 (EPSG: 4326).
+Components that should be defined or inspect 
 
 Commonly used by organizations that provide GIS data
 for the entire globe or many countries. CRS used by Google
 Earth
+---
+
+
+
 
 ---
-Quiz
-Question on CRS Projections
-
----
-background-image: url(img/image-from-rawpixel-id-2466603-jpeg.jpg)
+background-image: url(img/bg_1.png)
 background-size:cover
 class: middle, center
 
 # Types of Spatial Data
+
 ---
+
 # Vector data
+.left-column[
 - Points
 - Lines 
 - Polygons
+]
+.right-column[
+![](img/vector_data.jpeg)
+]
+.footnote[https://open.lib.umn.edu/mapping/chapter/4-design-and-symbolization/]
 
 ---
 # A different kind of data structure
-###Shapefiles are different from csvs
+### Vector data is stored in shapefiles 
+*which is a set of files*
+
 .pull-left[
+
+that store information about
+
+- location
+- shape
+- attributes of features 
+
+file extensions 
+- .shp, .shx, .dbf
+- .xml, .prj, .sbn, and .sbx
+  - optional
 
 ]
 
 --
 
 .pull-right[
-```{r, echo=FALSE, cache=TRUE}
-knitr::include_graphics("img/shp_meme.jpeg")
+![](img/shp_meme.jpeg)
 ```
 ]
 
 .footnote[Image: reddit]
-
+???
+In this format, information is distributed in multiple files. And as a beginner i have always done this. 
 ---
+
 # Raster data
 
 .left-column[
+"gridded" data 
+- saved in pixels
 
+file extensions
+- .jpeg, .tiff, .png
 ]
 
 .right-column[
@@ -129,9 +200,21 @@ Which of these is likely NOT a raster file
 
 # Summary of Theory
 - Map Projections and CRS
-- Types of data
+
+- Types of spatial data
   - Vector
   - Raster
+---
+class: middle, center
+background-image: url(img/bg2.png)
+background-position: center
+background-size: contain
+
+#R packages
+###sf
+###raster
+###stars
+
 ---
 
 class:middle, center
@@ -671,13 +754,9 @@ class: middle, center
 # Demo
 
 ---
-class:middle, center
 
-![](img/raster_concept_map.png)
 
----
-
-# Rasterize using `stars`
+# Rasterize using `stars` package
 
 ```{r message = FALSE, warning = FALSE, cache=TRUE}
 raster_data <- st_rasterize(data_sf)
@@ -707,6 +786,8 @@ class:middle, center
 
 # Demo
 
+---
+![](img/raster_concept_map.png)
 ---
 
 # Static Map 
