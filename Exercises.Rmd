@@ -1,9 +1,9 @@
 ---
 title: "Introduction to Spatial Data Analysis in R"
 subtitle: "Exercises"
-author: "Adithi Upadhya, Meenakshi Kushwaha"
+author: "Adithi R Upadhya, Meenakshi Kushwaha, and Pratyush Agrawal"
 institute: "ILK Labs"
-date: "20th June 2022 (updated: `r Sys.Date()`)"
+date: "20th June 2022"
 output:
   html_document:
     code_folding: hide
@@ -90,7 +90,7 @@ ggplot() +
 In this section we will do basic vector operations on a polygon sf object. 
 Till now we have been working with points geometry. Run the chunk below to convert the points data to polygon data. 
 
-```{r Vector operations, eval = FALSE, echo = TRUE}
+```{r Vector operations}
 # Convert point geometry to polygon
 mypolygon <- mydata_sf %>% 
   st_union() %>% 
@@ -159,7 +159,7 @@ You can make your maps interactive using the leaflet package
   can you change the points from circles to a different shape
 Read about available shapes here - https://rstudio.github.io/leaflet/markers.html]
 
-```{r Making your map interactive, eval = FALSE, echo = TRUE}
+```{r Making your map interactive}
 
 _______(bangalore_boundary) %>% # Fill in the blanks
   addTiles() %>% 
