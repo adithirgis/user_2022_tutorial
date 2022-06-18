@@ -107,10 +107,6 @@ for the entire globe or many countries. CRS used by Google
 Earth
 ---
 
-
-
-
----
 background-image: url(img/bg_1.png)
 background-size:cover
 class: middle, center
