@@ -13,60 +13,130 @@ output:
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+
 ### Load Libraries  
 
-
+As a first step, run the chunk below to load all the libraries required for this exercise
 ```{r, message = FALSE, warning = FALSE}
 library(sf) # for vector data
 library(raster) # for raster data
 library(here) # for specifying working directory
-library(tidyverse)
+library(tidyverse) # tidy data
 library(leaflet) # for interactive maps
 library(ggplot2) # plotting 
-library(ggspatial)
+library(ggspatial) # plotting
 
 ```
-
-### Your data set
 
 ## Reading vector data 
-## Reading shp file
+Here, we are repeating some of the same steps as the demo. 
+This chunk does the following
+- Read in the "spotted.csv" file 
+- Convert into sf object 
 
-```{r Read and plot shapefile}
-data <- read.csv("data/spotted.csv", sep = ",")
-prj4string <- "+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs"
-my_projection <- st_crs(prj4string)
-data_sf <- st_as_sf(data, coords = c("Longitude", "Latitude"), crs = my_projection)
+You can run the whole chunk (by pressing the green "play" button)
+OR run code to run one-by-one (ctrl+Enter)
 
-my_vector <- st_read(here("data", "BBMP_Boundary.shp"))
-plot(my_vector)
-## add spotted data to this
-## make leaflet map
+```{r Read and plot vector data}
+# read file
+mydata <- read.csv("data/spotted.csv", sep = ",")
+
+#check class of this object 
+class(mydata)
+
+# convert to sf object 
+# by sepcifiying coordinates and projection
+mydata_sf <- st_as_sf(mydata, 
+                      coords = c("Longitude", "Latitude"), 
+                      crs = 32643) # specifying projection
+
+#Check class of this new object
+class(mydata_sf)
+
+# Good job!
+# You've just converted a dataframe to a spatial object
+
 ```
 
+
+## Plotting vector data
+Go through the code and instructions here and fill in the blanks (line 85) before running running this chunk
+
+```{r plotting vector data}
+# plot the data
+plot(mydata_sf)
+
+#This map shows the different lizard species but 
+# doesn't have much spatial information
+# Let's try again using ggplot
+
+ggplot() + 
+  geom_sf(data = mydata_sf) + 
+  coord_sf()
+
+# This is your regular ggplot call 
+# which means can customize this as you would a ggplot
+# Can you change the theme of the map? (eg. theme_bw, theme_minimal, etc.)
+# YOUR TURN - Fill in the blanks to change theme of the map below
+
+ggplot() + 
+  geom_sf(data = mydata_sf) + 
+  coord_sf() +
+  theme_________ # FILL IN THE BLANKS
+```
+
+
+# Vector operations
+In this section we will do basic vector operations on a polygon sf object. 
+Till now we have been working with points geometry. Run the chunk below to convert the points data to polygon data. 
 
 ```{r Vector operations, eval = FALSE, echo = TRUE}
-st_area()
-st_centroid()
-st_boundary()
+# Convert point geometry to polygon
+mypolygon <- mydata_sf %>% 
+  st_union() %>% 
+  st_convex_hull()
 
-# buffer later
-```
-
-```{r Reading and re raster file}
-my_raster <- raster(here("data", "Ban_Temp_Mar2022.tif"))
-res(my_raster)
-
-ncell(my_raster)
-
-small_raster <- aggregate(my_raster, 2)
-ncell(small_raster)
-
+plot(mypolygon)
 ```
 
 
-- Can you change the style of the north arrow
+Fill in the blanks below to calculate the centroid and area of the polygon. Remember all functions start with st_ 
+
+```{r}
+_______(mypolygon) # Find centroid of the polygon
+________(mypolygon) # Find area of the polygon
+```
+
+
+# Raster data
+Raster data can be really high resolution at times (meaning large file sizes). Learning to rescale or resize raster files is useful when you don't need that level of detail for analysis. 
+
+Fill in the blanks below to 
+- read a raster file
+- check the resolution
+- check number of cells
+before and after re-sizing
+
+
+```{r Reading and resizing a raster file}
+my_raster <- ______(here("data", "Ban_Temp_Mar2022.tif")) # Fill in the blanks
+res(_______)# Fill in the blanks
+ncell(______) # Fill in the blanks
+
+small_raster <- aggregate(my_raster, 2) # resizing the file by a factor of 2
+____(small_raster) # Fill in the blanks to check resolution
+_____(_______) # Fill in the blanks to check number of cells or pixels
+
+```
+
+
+# Making maps 
+Below is the code from demo to create a custom map using ggplot
+- First run the chunk as is 
+- Then, change the style of the north arrow in line #150
   - Check here https://rdrr.io/cran/ggspatial/man/north_arrow_orienteering.html
+- Play around with other features to customize the map to your preferences
+
 ```{r Making your own map}
 bangalore_boundary <- st_read("data/BBMP_Boundary.shp")
 bangalore_boundary <- st_transform(bangalore_boundary, crs = my_projection)
@@ -77,20 +147,21 @@ ggplot() + geom_sf(data = bangalore_boundary, color = "green", size = 2, alpha =
   annotation_scale(location = "bl", width_hint = 0.5) +
   annotation_north_arrow(location = "bl", which_north = "true", 
                          pad_x = unit(0.75, "in"), pad_y = unit(0.5, "in"),
-                         style = north_arrow_fancy_orienteering) +
+                         style = north_arrow_fancy_orienteering) + # change arrow style
   coord_sf(xlim = c(77.4, 77.8), ylim = c(12.8, 13.2))
 ```
 
-- Fill in the blanks to make your map interactive, 
-- The defaulty map do not use "addTiles()"
-   - comment out the code on line 78 to check
-- Can you change the points from circles to a different shape
-[We have not covered it in the tutorial but you can check 
-available shapes here - https://rstudio.github.io/leaflet/markers.html]
+You can make your maps interactive using the leaflet package
+- Fill in the blanks (# line 164) to make your map interactive, 
+- Can you guess what addTiles () does in the code
+  - comment out line 165 to see what happens when you plot the map without addTiles()
+- Challenge question [ not covered in tutorial]
+  can you change the points from circles to a different shape
+Read about available shapes here - https://rstudio.github.io/leaflet/markers.html]
 
 ```{r Making your map interactive, eval = FALSE, echo = TRUE}
 
-_______(bangalore_boundary) %>% 
+_______(bangalore_boundary) %>% # Fill in the blanks
   addTiles() %>% 
   addPolygons(color = "green") %>%
       addCircles(
