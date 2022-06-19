@@ -157,7 +157,7 @@ ggplot() + geom_sf(data = bangalore_boundary, color = "green", size = 2, alpha =
 ```
 
 You can make your maps interactive using the leaflet package
-- Fill in the blanks (# line 164) to make your map interactive, 
+- Fill in the blanks (# line 169) to make your map interactive, 
 - Can you guess what addTiles () does in the code
   - comment out line 165 to see what happens when you plot the map without addTiles()
 - Challenge question [ not covered in tutorial]
