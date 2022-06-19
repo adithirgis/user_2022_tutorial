@@ -156,21 +156,21 @@ ggplot() + geom_sf(data = bangalore_boundary, color = "green", size = 2, alpha =
   coord_sf(xlim = c(77.4, 77.8), ylim = c(12.8, 13.2))
 ```
 
-You can make your maps interactive using the leaflet package
+You can make your maps interactive using the leaflet() function from leaflet package
 - Fill in the blanks (# line 169) to make your map interactive, 
 - Can you guess what addTiles () does in the code
-  - comment out line 165 to see what happens when you plot the map without addTiles()
+  - comment out line 170 to see what happens when you plot the map without addTiles()
 - Challenge question [ not covered in tutorial]
   can you change the points from circles to a different shape
 Read about available shapes here - https://rstudio.github.io/leaflet/markers.html]
 
 ```{r Making your map interactive, eval = FALSE, echo = TRUE}
 
-_______(bangalore_boundary) %>% # Fill in the blanks
+_____(bangalore_boundary) %>% # Fill in the blanks
   addTiles() %>% 
   addPolygons(color = "green") %>%
       addCircles(
-        data = data,
+        data = mydata,
         lng = ~ Longitude,
         lat = ~ Latitude,
         radius = 20,
