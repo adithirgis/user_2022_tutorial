@@ -14,11 +14,13 @@ output:
 ---
 class:middle, center
 
-# Logistics 
+# Hi, Logistics alert
 
 ## [GitHub](https://github.com/adithirgis/user_2022_tutorial)
 ## [Slides](https://user2022tutorial.netlify.app/)
 ## [Read Me / Notes / Questions](https://docs.google.com/document/d/1OZUgLioKxihOVatHHnrFTNQn5ySHwKEfYhZGZuHxf9w/edit#heading=h.inqydmvlzlfh) 
+
+### We will start in 5 minutes.
 
 ---
 class:middle, center
@@ -38,7 +40,7 @@ We will start with a very brief intro to map projections. Hopefully, it is just 
 ]
 .footnote[https://gistbok.ucgis.org/bok-topics/map-projections]
 ???
-Earth is a 3D object and when we are making a map we need to represent this in 2-D form i.e. on a flat surface. This is called MAP proejctions. As you can see in the figure here. There aer several ways to do this. Think of keeping a paper either on the poles and project each point on that paper. Depending on how you project, your final map will be diferent. 
+Earth is a 3D object and when we are making a map we need to represent this in 2-D form i.e. on a flat surface. This is called MAP projections. As you can see in the figure here. There are several ways to do this. Think of keeping a paper either on the poles and project each point on that paper. Depending on how you project, your final map will be different. 
 ---
 # Coordinate Reference Systems (CRS)
  Tell us how a map is related to real locations on earth
@@ -256,10 +258,9 @@ class:middle, center
 # [sf package](https://cran.r-project.org/web/packages/sf/vignettes/sf1.html)
 
 
-Package `sf` represents simple features as native R objects. 
-Similar to PostGIS, all functions and methods in sf that operate on spatial data are prefixed by st_. 
+Simple features are implemented using simple data structures (S3 classes, lists, matrix, vector).
 
-Simple features are implemented as R native data, using simple data structures (S3 classes, lists, matrix, vector).
+Similar to PostGIS, all functions and methods in sf that operate on spatial data are prefixed by st_. 
 
 Typical use involves reading, manipulating and writing of sets of features, with attributes and geometries.
 
@@ -483,6 +484,14 @@ If the coordinate reference system of x was set, these functions return values w
 st_distance(data_sf_projected[c(1), ], data_sf_projected[c(5), ])
 ```
 
+---
+
+# `st_area`
+
+Returns the area of a geometry, in the coordinate reference system used; in case x is in degrees longitude/latitude, `st_geod_area` is used for area calculation.
+
+Here we will use projected data to calculate area. 
+
 
 ---
 
@@ -515,15 +524,6 @@ buf <- st_buffer(data_sf_projected, dist = 3000)
 class:middle, center
 
 # Demo
-
-
----
-
-# `st_area`
-
-Returns the area of a geometry, in the coordinate reference system used; in case x is in degrees longitude/latitude, `st_geod_area` is used for area calculation.
-
-Here we will use projected data to calculate area. 
 
 
 ---
@@ -600,6 +600,7 @@ Return a sparse matrix with matching (`TRUE`) indexes, or a full logical matrix.
 
 
 ---
+class:middle, center
 
 # Other operations 
 
@@ -634,6 +635,11 @@ class:middle, center
 ???
 
 Summary of the vector data analysis till now. 
+
+---
+class:middle, center
+
+# BREAK - 5 minutes
 
 ---
 
@@ -919,6 +925,12 @@ Images from [rawpixel](https://www.rawpixel.com/)
 - [Meenakshi Kushwaha](https://meenakshi.rbind.io/) 
 - [Pratyush Agrawal](https://twitter.com/Pratyushagraw97) 
 
+---
+class:middle, center
 
+# Excersise - 20 minutes
 
+---
+class:middle, center
 
+# Questions?
