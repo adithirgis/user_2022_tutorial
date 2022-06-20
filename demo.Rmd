@@ -121,7 +121,7 @@ Mask values from a `Raster` object at the locations of spatial vector data
 ```{r, message = FALSE, warning = FALSE}
 data_sf_subset <- data_sf[1, ]
 
-data_sf_buffer <- st_buffer(data_sf_subset, dist = 5000) 
+data_sf_buffer <- st_buffer(data_sf_subset, dist = 12000) 
 masked_raster <- mask(x = temp, mask = data_sf_buffer)
 ```
 
