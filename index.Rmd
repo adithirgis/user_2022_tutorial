@@ -14,6 +14,15 @@ output:
 ---
 class:middle, center
 
+# Logistics 
+
+## [GitHub](https://github.com/adithirgis/user_2022_tutorial)
+## [Slides](https://user2022tutorial.netlify.app/)
+## [Read Me / Notes / Questions](https://docs.google.com/document/d/1OZUgLioKxihOVatHHnrFTNQn5ySHwKEfYhZGZuHxf9w/edit#heading=h.inqydmvlzlfh) 
+
+---
+class:middle, center
+
 # A very brief intro to Map Projections 
 
 ![](img/maps_intro.png)
@@ -680,7 +689,7 @@ To transform a `RasterLayer` to another coordinate reference system (projection)
 
 ```{r message = FALSE, warning = FALSE, cache = TRUE}
 # To transform 
-temp_proj <- projectRaster(temp, crs = "+proj=utm +zone=48 +datum=WGS84")
+temp_proj <- projectRaster(temp, crs = "+proj=utm +zone=43 +datum=WGS84")
 
 # To set the coordinate system 
 projection(y) <- "+proj=utm +zone=48 +datum=WGS84"

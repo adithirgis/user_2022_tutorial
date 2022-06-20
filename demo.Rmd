@@ -110,7 +110,7 @@ To transform a `RasterLayer` to another coordinate reference system (projection)
 
 ```{r, message = FALSE, warning = FALSE}
 # To transform 
-temp_proj <- projectRaster(temp, crs = "+proj=utm +zone=48 +datum=WGS84")
+temp_proj <- projectRaster(temp, crs = "+proj=utm +zone=43 +datum=WGS84")
 ```
 
 
@@ -146,10 +146,9 @@ plot(raster_data)
  
 ```{r, message = FALSE, warning = FALSE}
 tif <- read_stars("data/Ban_Temp_Mar2022.tif")
-summary(tif)
 class(tif)
 # Convert a foreign object to sf
-temp_sf <- st_as_sf(tif, as_points = TRUE, merge = FALSE)
+temp_sf <- st_as_sf(tif, as_points = TRUE)
 class(temp_sf)
 plot(temp_sf)
 ```
