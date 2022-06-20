@@ -25,7 +25,8 @@ class:middle, center
 # A very brief intro to Map Projections 
 
 ![](img/maps_intro.png)
-
+???
+We will start with a very brief intro to map projections. Hopefully, it is just enough to help you get comfortable with basic concepts of spatial analysis in R
 ---
 # Map Projections
 .left-column[
@@ -35,7 +36,8 @@ class:middle, center
 ![](img/proj_1.png)
 ]
 .footnote[https://gistbok.ucgis.org/bok-topics/map-projections]
-
+???
+Earth is a 3D object and when we are making a map we need to represent this in 2-D form i.e. on a flat surface. This is called MAP proejctions. As you can see in the figure here. There aer several ways to do this. Think of keeping a paper either on the poles and project each point on that paper. Depending on how you project, your final map will be diferent. 
 ---
 # Coordinate Reference Systems (CRS)
  Tell us how a map is related to real locations on earth
@@ -45,10 +47,11 @@ class:middle, center
 
 .footnote[Source:ESRI]
 ???
- For example, a location of (130, 12) is not meaningful if you do know where the origin is and if the x-coordinate is 140 meters, kilometers, or perhaps degrees away from it (in the x direction).
- https://www.esri.com/arcgis-blog/products/arcgis-pro/mapping/gcs_vs_pcs/
- A GCS defines where the data is located on the earth’s surface.
-A PCS tells the data how to draw on a flat surface, like on a paper map or a computer screen.
+For example, a location of (130, 12) is not meaningful if you do know where the origin is and what the units are. 
+
+Broadly, there are two categories of CRS. Geographic or unprojected, and it defines where the data is located on the earth’s surface as on the left. 
+A projected CRS  tells us how to draw on a 2-D flat surface, like on a paper map or a computer screen.
+
 A GCS is round, and so records locations in angular units (usually degrees). A PCS is flat, so it records locations in linear units (usually meters).
 
 ---
@@ -81,11 +84,13 @@ align with one another
 
 
 ???
+Commonly used by organizations that provide GIS data
+for the entire globe or many countries. CRS used by Google
+Earth
+So, how to think about CRS in when you are doing your spatial analysis. 
 . This is similar to making sure that
 units are the same when measuring volume or distances. 
-It is usually impossible to preserve all characteristics at the same time in a map projection. This means that when you want to carry out accurate analytical operations, you need to use a map projection that provides the best characteristics for your analyses. For example, if you need to measure distances on your map,
-Some are good for preserving areas on your map, others at preserving angles or distances.
-Maps are flat, so your map must have a PCS in order to know how to draw.
+It is usually impossible to preserve all characteristics at the same time in a map projection. This means that when you want to carry out your analysis, you need to use a projection that provides the best characteristics for your analyses. 
 ---
 
 # CRS in R
@@ -107,12 +112,8 @@ Maps are flat, so your map must have a PCS in order to know how to draw.
 .footnote[https://www.nceas.ucsb.edu/]
 
 ???
-Latitude/Longitude - WGS84 (EPSG: 4326).
-Components that should be defined or inspect 
+So, that sums up the theory part for this session. With this knowledge we hope that you'll have a good sense of handling projection of your data. 
 
-Commonly used by organizations that provide GIS data
-for the entire globe or many countries. CRS used by Google
-Earth
 ---
 
 background-image: url(img/bg_1.png)
@@ -180,10 +181,11 @@ file extensions
 &lt;img src="img/raster_concept.png" width="80%" /&gt;
 ]
 
-
 .footnote[Source: National Ecological Observatory Network (NEON)]
-
+???
+On the right, is a terresterial image, and we zoom in we see that each pixel repsents 1m2 and has a value.
 ---
+
 # Quiz 
 Which of this is NOT a shape file
 - plants.csv
@@ -192,20 +194,41 @@ Which of this is NOT a shape file
 - plants.shx
 
 ---
+# Quiz 
+Which of this is NOT a shape file
+- *plants.csv*
+- plants.shp
+- plants.dbf
+- plants.shx
+
+---
 # Quiz
-Which of these is likely NOT a raster file
+Which of these is NOT a raster file
 - plants.xlsx
 - plants.png
 - plants.tiff
 - plants.jpeg
+
+---
+# Quiz
+Which of these is NOT a raster file
+- *plants.xlsx*
+- plants.png
+- plants.tiff
+- plants.jpeg
+
+
 ---
 
 # Summary of Theory
-- Map Projections and CRS
+- Map Projections
+
+- Coordinate Reference Systems (CRS)
 
 - Types of spatial data
   - Vector
   - Raster
+  
 ---
 class: middle, center
 background-image: url(img/bg2.png)
