@@ -345,7 +345,9 @@ my_projection <- st_crs(prj4string)
 data_sf <- st_as_sf(data, coords = c("Longitude", "Latitude"), crs = my_projection)
 ```
 
-The order of Longitude, Latitude, and the exact column names are important.    
+The order of Longitude, Latitude, and the exact column names are important.   
+PROJ4 formatted string list - https://proj.org/apps/proj.html.
+EPSG numeric code - https://proj.org/apps/proj.html.
 
 ---
 
