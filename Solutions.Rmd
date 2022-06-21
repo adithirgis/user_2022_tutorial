@@ -1,0 +1,185 @@
+---
+title: "Introduction to Spatial Data Analysis in R"
+subtitle: "Exercises"
+author: "Adithi Upadhya, Meenakshi Kushwaha"
+institute: "ILK Labs"
+date: "20th June 2022 (updated: `r Sys.Date()`)"
+output:
+  html_document:
+    code_folding: hide
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+### Note
+Because of added text (solutions) in this file, line numbers have changed. For exact line numbers, please refer to the `Exercises.Rmd` file
+### Load Libraries  
+
+As a first step, run the chunk below to load all the libraries required for this exercise
+```{r, message = FALSE, warning = FALSE}
+library(sf) # for vector data
+library(raster) # for raster data
+library(here) # for specifying working directory
+library(tidyverse) # tidy data
+library(leaflet) # for interactive maps
+library(ggplot2) # plotting 
+library(ggspatial) # plotting
+
+```
+
+## Reading vector data 
+Here, we are repeating some of the same steps as the demo. 
+This chunk does the following
+- Read in the "spotted.csv" file 
+- Convert into sf object 
+
+You can run the whole chunk (by pressing the green "play" button)
+OR run code to run one-by-one (ctrl+Enter)
+
+```{r Read and plot vector data}
+# read file
+mydata <- read.csv("data/spotted.csv", sep = ",")
+
+#check class of this object 
+class(mydata)
+
+# convert to sf object 
+# by sepcifiying coordinates and projection
+mydata_sf <- st_as_sf(mydata, 
+                      coords = c("Longitude", "Latitude"), 
+                      crs = 32643) # specifying projection
+
+#Check class of this new object
+class(mydata_sf)
+
+# Good job!
+# You've just converted a dataframe to a spatial object
+
+```
+
+
+## Plotting vector data
+Go through the code and instructions here and fill in the blanks (line 85) before running running this chunk
+
+```{r plotting vector data}
+# plot the data
+plot(mydata_sf)
+
+#This map shows the different lizard species but 
+# doesn't have much spatial information
+# Let's try again using ggplot
+
+ggplot() + 
+  geom_sf(data = mydata_sf) + 
+  coord_sf()
+
+# This is your regular ggplot call 
+# which means can customize this as you would a ggplot
+# Can you change the theme of the map? (eg. theme_bw, theme_minimal, etc.)
+# YOUR TURN - Fill in the blanks to change theme of the map below
+
+ggplot() + 
+  geom_sf(data = mydata_sf) + 
+  coord_sf() +
+  theme_minimal() # FILL IN THE BLANKS
+```
+
+
+# Vector operations
+In this section we will do basic vector operations on a polygon sf object. 
+Till now we have been working with points geometry. Run the chunk below to convert the points data to polygon data. 
+
+```{r Vector operations, eval = FALSE, echo = TRUE}
+# Convert point geometry to polygon
+mypolygon <- mydata_sf %>% 
+  st_union() %>% 
+  st_convex_hull()
+
+plot(mypolygon)
+```
+
+
+Fill in the blanks below to calculate the centroid and area of the polygon. Remember all functions start with st_ 
+
+```{r}
+st_centroid(mypolygon) # Find centroid of the polygon
+st_area(mypolygon) # Find area of the polygon
+```
+
+
+# Raster data
+Raster data can be really high resolution at times (meaning large file sizes). Learning to rescale or resize raster files is useful when you don't need that level of detail for analysis. 
+
+Fill in the blanks below to 
+- read a raster file
+- check the resolution
+- check number of cells
+before and after re-sizing
+
+
+```{r Reading and resizing a raster file}
+my_raster <- raster(here("data", "Ban_Temp_Mar2022.tif")) # Fill in the blanks
+res(my_raster)# Fill in the blanks
+ncell(my_raster) # Fill in the blanks
+
+small_raster <- aggregate(my_raster, 2) # resizing the file by a factor of 2
+res(small_raster) # Fill in the blanks to check resolution
+ncell(small_raster) # Fill in the blanks to check number of cells or pixels
+
+```
+
+
+# Making maps 
+Below is the code from demo to create a custom map using ggplot
+- First run the chunk as is 
+- Then, change the style of the north arrow in line #155
+  - Check here https://rdrr.io/cran/ggspatial/man/north_arrow_orienteering.html
+- Play around with other features to customize the map to your preferences
+
+*In the soluton below, we've change the north arrow `style` from `north_arrow_fancy_orienteering`
+to `north_arrow_nautical`*
+
+```{r Making your own map}
+bangalore_boundary <- st_read("data/BBMP_Boundary.shp") # reading map boundary data
+prj4string <- "+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs" # defining projection
+my_projection <- st_crs(prj4string)
+bangalore_boundary <- st_transform(bangalore_boundary, crs = my_projection) # assigning projection to boundary data
+plot_data<-data_sf <- st_as_sf(mydata, 
+                               coords = c("Longitude", "Latitude"), 
+                               crs = my_projection) # assigning same projection to point data (lizard species in bangalore)
+
+ggplot() + geom_sf(data = bangalore_boundary, color = "green", size = 2, alpha = 0.1, fill = "green") +
+  geom_sf(data = plot_data, color = "blue", size = 2) + 
+  theme_bw() +
+  annotation_scale(location = "bl", width_hint = 0.5) +
+  annotation_north_arrow(location = "bl", which_north = "true", 
+                         pad_x = unit(0.75, "in"), pad_y = unit(0.5, "in"),
+                         style = north_arrow_nautical) + # change arrow style
+  coord_sf(xlim = c(77.4, 77.8), ylim = c(12.8, 13.2))
+```
+
+You can make your maps interactive using the leaflet() function from leaflet package
+- Fill in the blanks (# line 169) to make your map interactive, 
+- Can you guess what addTiles () does in the code
+  - comment out line 170 to see what happens when you plot the map without addTiles()
+- Challenge question [ not covered in tutorial]
+  can you change the points from circles to a different shape
+Read about available shapes here - https://rstudio.github.io/leaflet/markers.html]
+
+* `addTiles()` adds a base map to your spatial plot. The default is OpenStreetMaps. For other options, see https://rstudio.github.io/leaflet/basemaps.html*
+
+```{r Making your map interactive, eval = FALSE, echo = TRUE}
+
+leaflet(bangalore_boundary) %>% # Fill in the blanks
+  addTiles() %>% 
+  addPolygons(color = "green") %>%
+      addMarkers(
+        data = mydata,
+        lng = ~ Longitude,
+        lat = ~ Latitude,
+        popup = ~as.character(Name)
+        )
+```
+
