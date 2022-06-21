@@ -179,7 +179,7 @@ leaflet(bangalore_boundary) %>% # Fill in the blanks
         data = mydata,
         lng = ~ Longitude,
         lat = ~ Latitude,
-        popup = ~as.character(Name)
+        popup = ~as.character(`ï..Name`)
         )
 ```
 
